@@ -31,4 +31,4 @@ https://www.microsoft.com/fr-fr/p/bluetooth-le-simple-remote/9p83xqvgnbjx?active
 
 # Photos
 
-![Dev Board](/images/logo.png)
+![Dev Board](/images/dev_board.png)
