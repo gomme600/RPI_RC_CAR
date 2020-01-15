@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+#Bluetooth LE control software made for the NeOCampus car
+#Broadcasts a bluetooth LE caracteristic called RCCAR-PI
+#Author: Sebastian Lucas - 2019-2020
+
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import numpy as np
@@ -45,48 +49,14 @@ UART_TX_CHARACTERISTIC_UUID =  '6e400003-b5a3-f393-e0a9-e50e24dcca9e'
 LOCAL_NAME =                   'RCCAR-PI'
 mainloop = None
 
-''' 
-class TxCharacteristic(Characteristic):
-    def __init__(self, bus, index, service):
-        Characteristic.__init__(self, bus, index, UART_TX_CHARACTERISTIC_UUID,
-                                ['notify'], service)
-        self.notifying = False
-        GObject.io_add_watch(sys.stdin, GObject.IO_IN, self.on_console_input)
- 
-    def on_console_input(self, fd, condition):
-        s = fd.readline()
-        if s.isspace():
-            pass
-        else:
-            self.send_tx(s)
-        return True
- 
-    def send_tx(self, s):
-        if not self.notifying:
-            return
-        value = []
-        for c in s:
-            value.append(dbus.Byte(c.encode()))
-        self.PropertiesChanged(GATT_CHRC_IFACE, {'Value': value}, [])
- 
-    def StartNotify(self):
-        if self.notifying:
-            return
-        self.notifying = True
- 
-    def StopNotify(self):
-        if not self.notifying:
-            return
-        self.notifying = False
-''' 
+#Actions to perform when the caracteristic is changed
+
 class RxCharacteristic(Characteristic):
 
     def __init__(self, bus, index, service):
         Characteristic.__init__(self, bus, index, UART_RX_CHARACTERISTIC_UUID,
                                 ['write'], service)
-    def bytes(num):
-        return hex(num >> 8), hex(num & 0xFF)    
-
+        
     def WriteValue(self, value, options):
        
         try:
@@ -94,16 +64,15 @@ class RxCharacteristic(Characteristic):
             auto_drive_on = False
             print("------")
             print("Data Received !")
-            print("------")
-            #print('remote: {}'.format(bytearray(value).decode()))
-            #print("is str")
+            print("------")       
 
-            #print(value)
-            #print("is raw")        
-            
+            #We get the high and the low byte
             lowb = int(value[0])
             highb = int(value[1])
+
+            #Go fowards
             if((highb < 100) and (highb > 0)):
+                #If autonomous mode was on we turn it off before moving foward
                 if (auto_drive_on == True):
                     auto_drive_on = False
                     x.join() 
@@ -120,6 +89,7 @@ class RxCharacteristic(Characteristic):
                 FR.start(power)
                 FL.start(power)
 
+            #Go backwards
             if( (highb < 256) and (highb > 156) ):
                 if (auto_drive_on == True):
                     auto_drive_on = False
@@ -137,6 +107,7 @@ class RxCharacteristic(Characteristic):
                 BR.start(power)
                 BL.start(power)
 
+            #Turn left
             if( (lowb < 256) and (lowb > 156) ):
                 if (auto_drive_on == True):
                     auto_drive_on = False
@@ -154,6 +125,7 @@ class RxCharacteristic(Characteristic):
                 FR.start(power)
                 BL.start(power)
 
+            #Turn right
             if( (lowb < 100) and (lowb > 0) ):
                 if (auto_drive_on == True):
                     auto_drive_on = False
@@ -171,6 +143,7 @@ class RxCharacteristic(Characteristic):
                 BR.start(power)
                 FL.start(power)
 
+            #Stop the vehicule
             if( (highb == 0) and (lowb == 0) ):
                 if (auto_drive_on == True):
                     auto_drive_on = False
@@ -182,7 +155,8 @@ class RxCharacteristic(Characteristic):
                 FL.stop()
                 BR.stop()
                 BL.stop()
-
+                
+            #Turn on autonomous mode if the vehicule speed is set to 100
             if( (highb == 100) ):
                 if (auto_drive_on == True):
                    auto_drive_on = False
@@ -195,10 +169,12 @@ class RxCharacteristic(Characteristic):
                 BR.stop()
                 BL.stop()
                 auto_drive_on = True
+                #Start auto drive software in another thread
                 x = threading.Thread(target=auto_drive, args=(FR,FL,BR,BL,lambda : auto_drive_on,))
                 x.daemon = True
                 x.start()
-
+                
+        #Catch exceptions
         except Exception as ex:
             template = "An exception of type {0} occurred. Arguments:\n{1!r}"
             message = template.format(type(ex).__name__, ex.args)
@@ -207,7 +183,6 @@ class RxCharacteristic(Characteristic):
 class UartService(Service):
     def __init__(self, bus, index):
         Service.__init__(self, bus, index, UART_SERVICE_UUID, True)
-        #self.add_characteristic(TxCharacteristic(bus, 0, self))
         self.add_characteristic(RxCharacteristic(bus, 1, self))
  
 class Application(dbus.service.Object):
@@ -267,6 +242,7 @@ def find_adapter(bus):
 
     return None
 
+#Setup and loop BLE services
 def main():
     global mainloop
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)

@@ -1,0 +1,6 @@
+NeOCampus RC car - raspberry pi version
+Sebastian Lucas - 2019-2020
+
+To start just run BLE_control.py and look for the BLE device called RCCAR-PI on your smartphone
+
+Note : auto_drive.py is not meant to be run seperatly and should be started via BLE control

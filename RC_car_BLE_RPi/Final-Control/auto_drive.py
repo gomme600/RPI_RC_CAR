@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+#Auto drive example software made for the NeOCampus car
+#Will follow a black line using the RPi camera module
+#Code inspired by : http://einsteiniumstudios.com/beaglebone-opencv-line-following-robot.html
+#Author: Sebastian Lucas - 2019-2020
+
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
@@ -11,46 +16,24 @@ import RPi.GPIO as GPIO # always needed with RPi.GPIO
 import time
 import cv2
 
-#GPIO.setmode(GPIO.BOARD)  # choose BCM or BOARD numbering schemes. I use BCM  
-  
-#GPIO.setup(38, GPIO.OUT) # set GPIO 25 as an output. You can use any GPIO port  
-#GPIO.setup(36, GPIO.OUT) # set GPIO 25 as an output. You can use any GPIO port
-#GPIO.setup(31, GPIO.OUT) # set GPIO 25 as an output. You can use any GPIO port
-#GPIO.setup(29, GPIO.OUT) # set GPIO 25 as an output. You can use any GPIO port
-
-#FR = GPIO.PWM(38, 500)    # create an object p for PWM on port 25 at 50 Hertz
-#BR = GPIO.PWM(36, 500)    # create an object p for PWM on port 25 at 50 Hertz
-#FL = GPIO.PWM(29, 500)    # create an object p for PWM on port 25 at 50 Hertz
-#BL = GPIO.PWM(31, 500)    # create an object p for PWM on port 25 at 50 Hertz  
-                        # you can have more than one of these, but they need  
-                        # different names for each port   
-                        # e.g. p1, p2, motor, servo1 etc. 
-
-#video_capture = cv2.VideoCapture(-1)
-
-#video_capture.set(3, 160)
-
-#video_capture.set(4, 120)
 
 def auto_drive(FR,FL,BR,BL,auto_drive_on):
 
+ #Values used for swaying the vehicule left-right in case we loose the line (see below)
  toggle_value = 0
  check_toggle = True
 
+ #Setup the camera
  camera = PiCamera()
  camera.resolution = (160, 120)
+
+ #Rotate camera if needed on another vehicule
  #camera.rotation = 180
  rawCapture = PiRGBArray(camera, size=(160, 120))
  time.sleep(0.1)
 
  for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):	
     frame = frame.array
- 
-
-    # Capture the frames
-
-    #ret, frame = video_capture.read()
-
  
 
     # Crop the image
@@ -108,7 +91,8 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
         cv2.drawContours(crop_img, contours, -1, (0,255,0), 1)
 
  
-
+        #Based on the line position we control the vehicule
+        #Turn right
         if cx >= 120:
 
             print "Turn Right!"
@@ -120,6 +104,7 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             BR.start(28)
             FL.start(28)
 
+        #Foward slow
         if cx < 90 and cx > 70:
 
             print "On Track Slow!"
@@ -131,6 +116,7 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             FR.start(22)
             FL.start(22)
 
+        #Foward fast
         if cx < 120 and cx >= 90 and cx:
 
             print "On Track Fast!"
@@ -142,6 +128,7 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             FR.start(32)
             FL.start(32)
 
+        #Foward slow
         if cx <= 70 and cx > 50:
 
             print "On Track Slow!"
@@ -153,6 +140,7 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             FR.start(22)
             FL.start(22)
 
+        #Turn left
         if cx <= 50:
 
             print "Turn Left!"
@@ -164,14 +152,19 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             FR.start(28)
             BL.start(28)
 
+    #No line to follow
     else:
 
         print "I don't see the line"
 
+        #We stop moving
         FR.stop()
         FL.stop()
         BR.stop()
         BL.stop()
+
+        #We sway the camera left-right and reverse the vehicule in an attempt to find the line again
+        #If we don't find the line after 3 attempts we give up
         check_toggle = not check_toggle
         if(toggle_value < 3):
          BR.start(22)
@@ -214,19 +207,12 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             BL.stop()
             toggle_value = toggle_value+1
 
-    #Display the resulting frame
+    #Display the resulting frame (activate to see the camera output on attached display)
 
     #cv2.imshow('frame',crop_img)
     rawCapture.truncate(0)	
 
-    #if cv2.waitKey(1) & 0xFF == ord('q'):
-
-    #    break
-    #    FR.stop()
-    #    FL.stop()
-    #    BR.stop()
-    #    BL.stop()
-
+    #We check if the user still wants autonomous mode, if not we exit
     if auto_drive_on() == False: 
                 camera.close()
                 FR.stop()
