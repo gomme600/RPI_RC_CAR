@@ -31,4 +31,20 @@ https://www.microsoft.com/fr-fr/p/bluetooth-le-simple-remote/9p83xqvgnbjx?active
 
 # Photos
 
+Development board
 ![Dev Board](/images/dev_board.jpg)
+
+RPi car finished
+![Dev Board](/images/RPi_finished.jpg)
+
+BMW car finished
+![Dev Board](/images/bmw_finished.jpg)
+
+BMW car inside
+![Dev Board](/images/BMW_open.jpg)
+
+BMW car inside without the Arduino BLE 33
+![Dev Board](/images/BMW_open_2.jpg)
+
+BMW car inside LED driver chip
+![Dev Board](/images/BMW_MAX_chip.jpg)
