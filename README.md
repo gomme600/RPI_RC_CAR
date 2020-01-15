@@ -48,3 +48,6 @@ BMW car inside without the Arduino BLE 33
 
 BMW car inside LED driver chip
 ![Dev Board](/images/BMW_MAX_chip.jpg)
+
+BMW car pinout
+![Dev Board](/images/pinout.jpg)
