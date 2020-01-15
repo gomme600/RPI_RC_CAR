@@ -1,4 +1,4 @@
-# RPI_RC_CAR
+# NeOCampus RC CAR
 
 NeOCampus RC car example code - both versions (Arduino and Raspberry Pi)
 Author Sebastian Lucas - 2019-2020
