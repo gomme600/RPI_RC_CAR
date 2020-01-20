@@ -17,6 +17,11 @@ LEFT: -power, 0
 RIGHT: power, 0
 STOP: 0, 0
 
+
+Bluetooth:
+Service UUID: 00001101-0000-1000-8000-00805f9b34fb
+Caracteristic UUID: 00002101-0000-1000-8000-00805f9b34fb
+
 For testing purposes we can use an Android / Windows 10 app called "BLE simple remote"
 It is important to use the following settings:
 
@@ -31,23 +36,27 @@ https://www.microsoft.com/fr-fr/p/bluetooth-le-simple-remote/9p83xqvgnbjx?active
 
 # Photos
 
+BLE remote app
+![BLE app 1](/images/BLE_app_1.jpg)
+![BLE app 2](/images/BLE_app_2.jpg)
+
 Development board
 ![Dev Board](/images/dev_board.jpg)
 
 RPi car finished
-![Dev Board](/images/RPi_finished.jpg)
+![RPI finished](/images/RPi_finished.jpg)
 
 BMW car finished
-![Dev Board](/images/bmw_finished.jpg)
+![BMW finished](/images/bmw_finished.jpg)
 
 BMW car inside
-![Dev Board](/images/BMW_open.jpg)
+![BMW inside](/images/BMW_open.jpg)
 
 BMW car inside without the Arduino BLE 33
-![Dev Board](/images/BMW_open_2.jpg)
+![BMW inside 2](/images/BMW_open_2.jpg)
 
 BMW car inside LED driver chip
-![Dev Board](/images/BMW_MAX_chip.jpg)
+![BMW inside 3](/images/BMW_MAX_chip.jpg)
 
 BMW car pinout
-![Dev Board](/images/pinout.jpg)
+![BMW doc](/images/pinout.jpg)
