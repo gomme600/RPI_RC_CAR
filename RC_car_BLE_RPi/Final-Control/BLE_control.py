@@ -63,17 +63,17 @@ class RxCharacteristic(Characteristic):
                    auto_drive_on = False
                    x.join() 
                    print("Autonomous mode off !")  
-
-                print("Autonomous !")
-                FR.stop()
-                FL.stop()
-                BR.stop()
-                BL.stop()
-                auto_drive_on = True
-                #Start auto drive software in another thread
-                x = threading.Thread(target=auto_drive, args=(FR,FL,BR,BL,lambda : auto_drive_on,))
-                x.daemon = True
-                x.start()
+                
+        print("Autonomous !")
+        FR.stop()
+        FL.stop()
+        BR.stop()
+        BL.stop()
+        auto_drive_on = True
+        #Start auto drive software in another thread
+        x = threading.Thread(target=auto_drive, args=(FR,FL,BR,BL,lambda : auto_drive_on,))
+        x.daemon = True
+        x.start()
         
     def WriteValue(self, value, options):
        
