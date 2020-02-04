@@ -56,6 +56,24 @@ class RxCharacteristic(Characteristic):
     def __init__(self, bus, index, service):
         Characteristic.__init__(self, bus, index, UART_RX_CHARACTERISTIC_UUID,
                                 ['write'], service)
+        #Start auto drive on startup!
+        global auto_drive_on
+        auto_drive_on = False
+        if (auto_drive_on == True):
+                   auto_drive_on = False
+                   x.join() 
+                   print("Autonomous mode off !")  
+
+                print("Autonomous !")
+                FR.stop()
+                FL.stop()
+                BR.stop()
+                BL.stop()
+                auto_drive_on = True
+                #Start auto drive software in another thread
+                x = threading.Thread(target=auto_drive, args=(FR,FL,BR,BL,lambda : auto_drive_on,))
+                x.daemon = True
+                x.start()
         
     def WriteValue(self, value, options):
        
