@@ -1,0 +1,11 @@
+[Unit]
+ Description=Service to start the RC CAR software
+ After=multi-user.target
+
+ [Service]
+ Type=idle
+ ExecStart=/usr/bin/python /home/pi/RPI_RC_CAR/RC_car_BLE_RPi/Final-Control/BLE_control.py
+
+ [Install]
+ WantedBy=multi-user.target
+
