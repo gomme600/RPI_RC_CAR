@@ -5,6 +5,20 @@
 #Code inspired by : http://einsteiniumstudios.com/beaglebone-opencv-line-following-robot.html
 #Author: Sebastian Lucas - 2019-2020
 
+##########################
+##----USER SETTINGS----###
+##########################
+
+#Time to rev up the motors to overcome initial force (in seconds)
+REVUP_TIME = 0.005
+
+#REVUP speed PWM value
+REVUP_SPEED = 90
+
+##########################
+##----END  SETTINGS----###
+##########################
+
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
@@ -101,6 +115,11 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             FL.stop()
             BR.stop()
             BL.stop()
+            BR.start(REVUP_SPEED)
+            FL.start(REVUP_SPEED)
+            time.sleep(REVUP_TIME)
+            BR.stop()
+            FL.stop()
             BR.start(28)
             FL.start(28)
 
@@ -113,6 +132,11 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             FL.stop()
             BR.stop()
             BL.stop()
+            FR.start(REVUP_SPEED)
+            FL.start(REVUP_SPEED)
+            time.sleep(REVUP_TIME)
+            FR.stop()
+            FL.stop()
             FR.start(22)
             FL.start(22)
 
@@ -124,7 +148,12 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             FR.stop()
             FL.stop()
             BR.stop()
-            BL.stop()  
+            BL.stop()
+            FR.start(REVUP_SPEED)
+            FL.start(REVUP_SPEED)
+            time.sleep(REVUP_TIME) 
+            FR.stop()   
+            FL.stop()
             FR.start(32)
             FL.start(32)
 
@@ -136,7 +165,12 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             FR.stop()
             FL.stop()
             BR.stop()
-            BL.stop()  
+            BL.stop()
+            FR.start(REVUP_SPEED)
+            FL.start(REVUP_SPEED)
+            time.sleep(REVUP_TIME)
+            FR.stop()   
+            FL.stop()
             FR.start(22)
             FL.start(22)
 
@@ -148,6 +182,11 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             FR.stop()
             FL.stop()
             BR.stop()
+            BL.stop()
+            FR.start(REVUP_SPEED)
+            BL.start(REVUP_SPEED)
+            time.sleep(REVUP_TIME)
+            FR.stop()   
             BL.stop()
             FR.start(28)
             BL.start(28)
@@ -167,6 +206,11 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
         #If we don't find the line after 3 attempts we give up
         check_toggle = not check_toggle
         if(toggle_value < 3):
+         BR.start(REVUP_SPEED)
+         BL.start(REVUP_SPEED)
+         time.sleep(REVUP_TIME)
+         BR.stop()   
+         BL.stop()
          BR.start(22)
          BL.start(22)
          time.sleep(0.2)
@@ -175,6 +219,11 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
          BR.stop()  
          BL.stop()
          if(check_toggle == False):
+            FR.start(REVUP_SPEED)
+            BL.start(REVUP_SPEED)
+            time.sleep(REVUP_TIME)
+            FR.stop()   
+            BL.stop()
             FR.start(40)
             BL.start(40)
             time.sleep(0.2) 
@@ -182,6 +231,11 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             FL.stop()
             BR.stop()  
             BL.stop()
+            BR.start(REVUP_SPEED)
+            FL.start(REVUP_SPEED)
+            time.sleep(REVUP_TIME)
+            BR.stop()   
+            FL.stop()
             BR.start(40)
             FL.start(40)
             time.sleep(0.2)
@@ -191,12 +245,22 @@ def auto_drive(FR,FL,BR,BL,auto_drive_on):
             BL.stop()
             toggle_value = toggle_value+1
          else:
+            BR.start(REVUP_SPEED)
+            FL.start(REVUP_SPEED)
+            time.sleep(REVUP_TIME)
+            BR.stop()   
+            FL.stop()
             BR.start(40)
             FL.start(40)
             time.sleep(0.2)
             FR.stop()
             FL.stop()
             BR.stop()  
+            BL.stop()
+            FR.start(REVUP_SPEED)
+            BL.start(REVUP_SPEED)
+            time.sleep(REVUP_TIME)
+            FR.stop()   
             BL.stop()
             FR.start(40)
             BL.start(40)

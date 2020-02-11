@@ -4,6 +4,20 @@
 #Broadcasts a bluetooth LE caracteristic called RCCAR-PI
 #Author: Sebastian Lucas - 2019-2020
 
+##########################
+##----USER SETTINGS----###
+##########################
+
+#Time to rev up the motors to overcome initial force (in seconds)
+REVUP_TIME = 0.01
+
+#REVUP speed PWM value
+REVUP_SPEED = 90
+
+##########################
+##----END  SETTINGS----###
+##########################
+
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import numpy as np
@@ -104,6 +118,11 @@ class RxCharacteristic(Characteristic):
                 power = highb
                 print("Power : ")
                 print(power)
+                FR.start(REVUP_SPEED)
+                FL.start(REVUP_SPEED)
+                time.sleep(REVUP_TIME)
+                FR.stop()   
+                FL.stop()
                 FR.start(power)
                 FL.start(power)
 
@@ -122,6 +141,11 @@ class RxCharacteristic(Characteristic):
                 power = (((-1)*highb)+256)
                 print("Power : ")
                 print(power)
+                BR.start(REVUP_SPEED)
+                BL.start(REVUP_SPEED)
+                time.sleep(REVUP_TIME)
+                BR.stop()   
+                BL.stop()
                 BR.start(power)
                 BL.start(power)
 
@@ -140,6 +164,11 @@ class RxCharacteristic(Characteristic):
                 power = (((-1)*lowb)+256)
                 print("Power : ")
                 print(power)
+                FR.start(REVUP_SPEED)
+                BL.start(REVUP_SPEED)
+                time.sleep(REVUP_TIME)
+                FR.stop()   
+                BL.stop()
                 FR.start(power)
                 BL.start(power)
 
@@ -158,6 +187,11 @@ class RxCharacteristic(Characteristic):
                 power = lowb
                 print("Power : ")
                 print(power)
+                BR.start(REVUP_SPEED)
+                FL.start(REVUP_SPEED)
+                time.sleep(REVUP_TIME)
+                BR.stop()   
+                FL.stop()
                 BR.start(power)
                 FL.start(power)
 
